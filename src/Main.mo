@@ -1,61 +1,25 @@
-import Array "mo:base/Array";
 import Result "mo:base/Result";
 import Text "mo:base/Text";
-import Iter "mo:base/Iter";
 import Nat "mo:base/Nat";
 import Option "mo:base/Option";
-import Http "Http"
+import Http "Http";
+import EventHandler "Handlers/EventHandler";
+import Types "Types";
 
-actor {
+actor : Types.MainActor {
 
-  public type AddEventRequest = {
-    name : Text;
-    description : Text;
-    time : Nat;
-    location : Text;
-    duration : ?Nat;
-  };
-
-  public type Event = {
-    name : Text;
-    description : Text;
-    time : Nat;
-    location : Text;
-    duration : ?Nat;
-  };
-
-  public type EventStableData = {
-    events : [Event];
-  };
-
-  class EventHandler(data : EventStableData) {
-    var events = data.events;
-
-    public func add(request : AddEventRequest) {
-      events := Array.append(events, [request]);
-    };
-
-    public func get() : [Event] {
-      events;
-    };
-
-    public func toStableData() : EventStableData {
-      { events = events };
-    };
-  };
-
-  stable var eventData : EventStableData = {
+  stable var eventData : EventHandler.StableData = {
     events = [];
   };
 
-  var eventHandler = EventHandler(eventData);
+  var eventHandler = EventHandler.EventHandler(eventData);
 
-  public func addEvent(request : AddEventRequest) : async Result.Result<(), Text> {
+  public func addEvent(request : Types.AddEventRequest) : async Result.Result<(), Text> {
     eventHandler.add(request);
     #ok();
   };
 
-  public func getEvents() : async Result.Result<[Event], Text> {
+  public func getEvents() : async Result.Result<[EventHandler.Event], Text> {
     #ok(eventHandler.get());
   };
 
