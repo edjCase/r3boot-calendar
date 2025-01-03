@@ -1,0 +1,51 @@
+type StatusCode = nat16;
+type Result_1 = 
+ variant {
+   err: text;
+   ok;
+ };
+type Result = 
+ variant {
+   err: text;
+   ok: vec Event;
+ };
+type Response = 
+ record {
+   body: blob;
+   headers: vec HeaderField;
+   status_code: StatusCode;
+ };
+type Request = 
+ record {
+   body: blob;
+   headers: vec HeaderField;
+   method: Method;
+   url: text;
+ };
+type Method = text;
+type HeaderField = 
+ record {
+   text;
+   text;
+ };
+type Event = 
+ record {
+   description: text;
+   duration: opt nat;
+   location: text;
+   name: text;
+   time: nat;
+ };
+type AddEventRequest = 
+ record {
+   description: text;
+   duration: opt nat;
+   location: text;
+   name: text;
+   time: nat;
+ };
+service : {
+  addEvent: (AddEventRequest) -> (Result_1);
+  getEvents: () -> (Result);
+  http_request: (Request) -> (Response) query;
+}
