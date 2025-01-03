@@ -61,6 +61,7 @@ actor {
 
   public query func http_request(req : Http.Request) : async Http.Response {
     var html = "<table>";
+    html #= "<tr><th>Name</th><th>Description</th><th>Time</th><th>Location</th><th>Duration</th></tr>";
 
     for (event in eventHandler.get().vals()) {
       html #= "<tr>";
@@ -76,7 +77,7 @@ actor {
 
     {
       body = Text.encodeUtf8(html);
-      headers = [("Content-Type", "text/plain")];
+      headers = [("Content-Type", "text/html")];
       status_code = Http.Status.OK;
     };
   };
